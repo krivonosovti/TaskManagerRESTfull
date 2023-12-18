@@ -30,12 +30,16 @@ public class TodoService {
     }
 
 
-    public Todo complete (Long id){
+     public Todo complete (Long id) throws TodoStatusException {
         TodoEntity todo = todoRepo.findById(id).get();
+         if (todo.getCompleted() != "In process" || "Open")
+        {
+            throw new TodoStatusException("Ошибка последовательности действий");
+        }
         todo.setCompleted("Closed");
-    //  Date now = new Date();
-    //  todo.setReal_date(now);
-    //  todo.setTime(now.getTime() - todo.getCreated_date().getTime());
+        Date now = new Date();
+        todo.setReal_date(now);
+        todo.setTime(now.getTime() - todo.getCreated_date().getTime());
         return Todo.toModel(todoRepo.save(todo));
     }
 
